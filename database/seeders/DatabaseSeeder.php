@@ -15,9 +15,25 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        User::insert([
+            [
+                'username' => 'yafiyoga',
+                'password' => bcrypt('N@dia2007'),
+                'role' => 'admin',
+                'isDeleted' => false,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+             
+                'username' => 'pakfidi',
+                'password' => bcrypt('fidiwputro'),
+                'role' => 'guru_sd', // pilih salah satu dari enum
+                'isDeleted' => false,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
+            
     }
 }

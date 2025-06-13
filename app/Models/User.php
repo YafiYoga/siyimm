@@ -2,47 +2,42 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
-        'name',
-        'email',
+        'username',
         'password',
+        'role',
+        'isDeleted',
+        'id_pegawai',    // FK ke pegawai.id (primary key)
+        'id_walimurid',  // FK ke walimurid.id
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
-
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    // Hash password otomatis saat diset
+    protected function password(): Attribute
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return Attribute::make(
+            set: fn ($value) => bcrypt($value),
+        );
+    }
+
+    // Relasi ke Pegawai (id_pegawai -> pegawai.id)
+    public function pegawai()
+    {
+        
+        // Karena pegawai primary key adalah 'id', bukan 'niy'
+       return $this->belongsTo(Pegawai::class, 'id_pegawai', 'niy');
+    }
+
+    // Relasi ke Wali Murid (id_walimurid -> walimurid.id)
+    public function walimurid()
+    {
+        return $this->belongsTo(Walimurid::class, 'id_walimurid');
     }
 }
